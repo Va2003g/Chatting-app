@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import {
   Children,
   createContext,
@@ -34,7 +34,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<Object | null>();
+  const [user, setUser] = useState<Object | null>({});
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );
@@ -44,6 +44,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         setIsAuthenticated(true);
         setUser(user);
+        updateUserData(user?.uid);
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -52,6 +53,20 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return unsub;
   }, []);
 
+  const updateUserData = async (userId: string) => {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      let data = docSnap.data();
+      setUser((user) => ({
+        ...user,
+        username: data.username,
+        profileUrl: data.profileUrl,
+        userId: data.userId,
+      }));
+    }
+  };
   const login = async (email: string, password: string) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
@@ -60,8 +75,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       console.log(e);
       let msg = e.message;
       if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
-      if (msg.includes("(auth/invalid-credential)"))
-        msg = "Wrong Credentials";
+      if (msg.includes("(auth/invalid-credential)")) msg = "Wrong Credentials";
       return { success: false, msg };
     }
   };

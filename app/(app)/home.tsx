@@ -7,9 +7,9 @@ const Home = () => {
   const handleLogout = async ()=>{
     await logout();
   }
-  console.log(user)
+  console.log('user data',user)
   return (
-    <View>
+    <View className='flex-1 bg-white'>
       <Text>Home</Text>
       <Button title='Sign Out' onPress={handleLogout}/>
     </View>
