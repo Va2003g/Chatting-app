@@ -2,6 +2,7 @@ import { auth, db } from "@/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { addDoc, doc, setDoc } from "firebase/firestore";
@@ -17,7 +18,10 @@ import {
 interface AuthContextType {
   user: any; // You can specify the actual type here based on your user object structure
   isAuthenticated: boolean | undefined;
-  login: (email: string, password: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; data?: Object; msg?: string }>;
   register: (
     email: string,
     password: string,
@@ -50,7 +54,16 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-    } catch (e) {}
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      return { success: true };
+    } catch (e: any) {
+      console.log(e);
+      let msg = e.message;
+      if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
+      if (msg.includes("(auth/invalid-credential)"))
+        msg = "Wrong Credentials";
+      return { success: false, msg };
+    }
   };
   const logout = async () => {
     try {
@@ -85,8 +98,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       console.log(e);
       let msg = e.message;
       if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
-      if (msg.includes("(auth/invalid-password)")) msg = "Password should be minimum of 6 length";
-      if (msg.includes("(auth/email-already-in-use)")) msg = "This email is already in use";
+      if (msg.includes("(auth/invalid-password)"))
+        msg = "Password should be minimum of 6 length";
+      if (msg.includes("(auth/email-already-in-use)"))
+        msg = "This email is already in use";
       return { success: false, msg };
     }
   };
