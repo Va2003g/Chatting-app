@@ -16,7 +16,7 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UserType } from "@/utils/Types";
+import { MessageType, UserType } from "@/utils/Types";
 
 const ChatItem = ({
   item,
@@ -31,7 +31,9 @@ const ChatItem = ({
   router: any;
   currentUser: UserType;
 }) => {
-  const [lastMessage, setLastMessage] = useState<any>(undefined);
+  const [lastMessage, setLastMessage] = useState<
+    MessageType | undefined | null
+  >(undefined);
   useEffect(() => {
     let roomId = getRoomId(currentUser?.userId, item?.userId);
     const docRef = doc(db, "rooms", roomId);
@@ -41,7 +43,7 @@ const ChatItem = ({
       let allMessages = snapshot.docs.map((doc) => {
         return doc.data();
       });
-      setLastMessage(allMessages[0] ? allMessages[0] : null);
+      setLastMessage(allMessages[0] ? (allMessages[0] as MessageType) : null);
     });
     return unsub;
   }, []);

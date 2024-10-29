@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
 
 export interface UserType {
     username: string,
@@ -8,7 +9,7 @@ export interface UserType {
 }
 
 export interface MessageType {
-    createdAt: Date,
+    createdAt: Timestamp,
     profileUrl: string,
     senderName: string,
     text: string,

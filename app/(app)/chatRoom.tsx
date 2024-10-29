@@ -2,8 +2,6 @@ import {
   Alert,
   Keyboard,
   ScrollView,
-  StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -29,7 +27,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import { UserType } from "@/utils/Types";
+import { MessageType, UserType } from "@/utils/Types";
 
 const ChatRoom = () => {
   const params = useLocalSearchParams();
@@ -39,7 +37,7 @@ const ChatRoom = () => {
     profileUrl: params.profileUrl as string,
   };
   const router = useRouter();
-  const [messages, setMessages] = useState<any>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const { user } = useAuth();
   const textRef = useRef("");
   const inputRef = useRef<TextInput>(null);
@@ -56,7 +54,7 @@ const ChatRoom = () => {
       let allMessages = snapshot.docs.map((doc) => {
         return doc.data();
       });
-      setMessages([...allMessages]);
+      setMessages([...allMessages] as MessageType[]);
     });
 
     const keyboardShowListener = Keyboard.addListener(
