@@ -1,22 +1,44 @@
-import { View, Text, KeyboardAvoidingView, Platform,ScrollView } from 'react-native'
-import React, { ReactNode } from 'react'
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
+import React, { ReactNode } from "react";
 
-const ios = Platform.OS === 'ios'
-const CustomKeyboardView = ({children}:{children:ReactNode}) => {
+const ios = Platform.OS === "ios";
+const CustomKeyboardView = ({
+  children,
+  inChat,
+}: {
+  children: ReactNode;
+  inChat?: boolean;
+}) => {
+  let kavConfig = {};
+  let scrollViewConfig = {};
+  if (inChat) {
+    kavConfig = { keyboardVerticalOffset: 90 };
+    scrollViewConfig = { contentContainerStyle: { flex: 1 } };
+  }
   return (
     <KeyboardAvoidingView
-        behavior={ios ? 'padding':'height'}
-        style={{flex:1}}
+      behavior={ios ? "padding" : "height"}
+      // keyboardVerticalOffset={90}
+      style={{ flex: 1 }}
+      {...kavConfig}
     >
-        <ScrollView
-            
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-        >
-            {children}
-        </ScrollView>
+      <ScrollView
+        style={{ flex: 1 }}
+        // contentContainerStyle={{ flex: 1 }}
+        bounces={false}
+        {...scrollViewConfig}
+        showsVerticalScrollIndicator={false}
+      >
+        {children}
+      </ScrollView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
-export default CustomKeyboardView
+export default CustomKeyboardView;

@@ -21,6 +21,7 @@ const ChatItem = ({
 
   const openChatRoom = ()=>{
     router.push({pathname:'/chatRoom',params:item})
+    console.log("item in chatitem", item);
   }
   return (
     <TouchableOpacity

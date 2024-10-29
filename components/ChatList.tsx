@@ -4,6 +4,7 @@ import ChatItem from "./ChatItem";
 import { useRouter } from "expo-router";
 
 const ChatList = ({ users }: { users: Object[] }) => {
+  console.log("users in chat list", users);
   const router = useRouter();
   return (
     <View className="flex-1">
@@ -12,14 +13,17 @@ const ChatList = ({ users }: { users: Object[] }) => {
         contentContainerStyle={{ flex: 1, paddingVertical: 25 }}
         keyExtractor={(item) => Math.random().toString()}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item, index }) => (
-          <ChatItem
-            noBorder={index + 1 === users.length}
-            item={item}
-            index={index}
-            router={router}
-          />
-        )}
+        renderItem={({ item, index }) => {
+          
+          return (
+            <ChatItem
+              noBorder={index + 1 === users.length}
+              item={item}
+              index={index}
+              router={router}
+            />
+          );
+        }}
       />
     </View>
   );
