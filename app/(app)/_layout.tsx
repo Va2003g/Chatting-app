@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 import HomeHeader from "@/components/HomeHeader";
+import ChatRoomHeader from "@/components/ChatRoomHeader";
 
 const _layout = () => {
   return (
