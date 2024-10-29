@@ -1,9 +1,11 @@
 import { auth, db } from "@/firebaseConfig";
+import { AuthContextType, UserType } from "@/utils/Types";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  User,
 } from "firebase/auth";
 import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import {
@@ -15,26 +17,10 @@ import {
   useState,
 } from "react";
 
-interface AuthContextType {
-  user: any; // You can specify the actual type here based on your user object structure
-  isAuthenticated: boolean | undefined;
-  login: (
-    email: string,
-    password: string
-  ) => Promise<{ success: boolean; data?: Object; msg?: string }>;
-  register: (
-    email: string,
-    password: string,
-    username: string,
-    profileUrl: string
-  ) => Promise<{ success: boolean; data?: Object; msg?: string }>;
-  logout: () => Promise<{ success: boolean; data?: Object; msg?: string }>;
-}
-
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<Object | null>({});
+  const [user, setUser] = useState<UserType | null | User>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );
@@ -59,12 +45,15 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     if (docSnap.exists()) {
       let data = docSnap.data();
-      setUser((user) => ({
-        ...user,
-        username: data.username,
-        profileUrl: data.profileUrl,
-        userId: data.userId,
-      }));
+      setUser(
+        (user) =>
+          ({
+            ...user,
+            username: data.username,
+            profileUrl: data.profileUrl,
+            userId: data.userId,
+          } as UserType)
+      );
     }
   };
   const login = async (email: string, password: string) => {
@@ -122,7 +111,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, register, logout }}
+      value={{ user: user as UserType, isAuthenticated, login, register, logout }}
     >
       {children}
     </AuthContext.Provider>

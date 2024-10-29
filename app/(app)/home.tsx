@@ -10,16 +10,17 @@ import ChatList from "@/components/ChatList";
 import Loading from "@/components/Loading";
 import { getDocs, query, where } from "firebase/firestore";
 import { usersRef } from "@/firebaseConfig";
+import { UserType } from "@/utils/Types";
 const Home = () => {
   const { logout, user } = useAuth();
-  const [users, setUsers] = useState<Object[]>({});
+  const [users, setUsers] = useState<UserType[]>([]);
 
   const getUsers = async () => {
     const q = query(usersRef, where("userId", "!=", user?.uid));
     const querySnapshot = await getDocs(q);
-    let data: Object[] = [];
+    let data: UserType[] = [];
     querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data() });
+      data.push({ ...doc.data() } as UserType);
     });
 
     if (data.length !== 0) setUsers(data);

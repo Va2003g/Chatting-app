@@ -1,6 +1,7 @@
 import {
   Alert,
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -28,15 +29,21 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { UserType } from "@/utils/Types";
 
 const ChatRoom = () => {
-  const item: Object = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const item: UserType = {
+    userId: params.userId as string,
+    username: params.username as string,
+    profileUrl: params.profileUrl as string,
+  };
   const router = useRouter();
   const [messages, setMessages] = useState<any>([]);
   const { user } = useAuth();
   const textRef = useRef("");
-  const inputRef = useRef(null);
-  const scrollViewRef = useRef(null);
+  const inputRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     createRoomIfNotExists();

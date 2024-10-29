@@ -4,13 +4,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import { MessageType, UserType } from "@/utils/Types";
 
 const MessageItem = ({
   message,
   currentUser,
 }: {
-  message: Object;
-  currentUser: Object;
+  message: MessageType;
+  currentUser: UserType;
 }) => {
   if (currentUser?.userId === message?.userId) {
     //my message

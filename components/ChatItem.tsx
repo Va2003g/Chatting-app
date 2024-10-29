@@ -16,6 +16,7 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
+import { UserType } from "@/utils/Types";
 
 const ChatItem = ({
   item,
@@ -24,11 +25,11 @@ const ChatItem = ({
   router,
   currentUser,
 }: {
-  item: Object;
+  item: UserType;
   index: number;
   noBorder: boolean;
   router: any;
-  currentUser: Object;
+  currentUser: UserType;
 }) => {
   const [lastMessage, setLastMessage] = useState<any>(undefined);
   useEffect(() => {

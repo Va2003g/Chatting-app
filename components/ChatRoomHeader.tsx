@@ -4,8 +4,9 @@ import { Stack } from "expo-router";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { Image } from "expo-image";
+import { UserType } from "@/utils/Types";
 
-const ChatRoomHeader = ({ user, router }: { user?: Object; router?: any }) => {
+const ChatRoomHeader = ({ user, router }: { user?: UserType; router?: any }) => {
   return (
     <Stack.Screen
     options={{
