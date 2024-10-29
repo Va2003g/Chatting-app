@@ -1,5 +1,6 @@
 import {
   Alert,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -16,7 +17,16 @@ import { Feather } from "@expo/vector-icons";
 import CustomKeyboardView from "@/components/CustomKeyboardView";
 import { useAuth } from "@/context/authContext";
 import { getRoomId } from "@/utils/common";
-import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 
 const ChatRoom = () => {
@@ -25,21 +35,32 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState<any>([]);
   const { user } = useAuth();
   const textRef = useRef("");
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     createRoomIfNotExists();
 
-    let roomId = getRoomId(user?.userId,item?.userId);
-    const docRef = doc(db,'rooms',roomId);
-    const messagesRef = collection(docRef,'messages');
-    const q = query(messagesRef,orderBy('createdAt','asc'));
-    let unsub = onSnapshot(q,(snapshot)=>{
-        let allMessages = snapshot.docs.map(doc=>{
-            return doc.data();
-        })
-        setMessages([...allMessages])
-    })
+    let roomId = getRoomId(user?.userId, item?.userId);
+    const docRef = doc(db, "rooms", roomId);
+    const messagesRef = collection(docRef, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+    let unsub = onSnapshot(q, (snapshot) => {
+      let allMessages = snapshot.docs.map((doc) => {
+        return doc.data();
+      });
+      setMessages([...allMessages]);
+    });
+
+    const keyboardShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      updateScrollView
+    );
+
+    return () => {
+      unsub;
+      keyboardShowListener.remove();
+    };
   }, []);
 
   const createRoomIfNotExists = async () => {
@@ -58,8 +79,8 @@ const ChatRoom = () => {
       let roomId = getRoomId(user?.userId, item?.userId);
       const docRef = doc(db, "rooms", roomId);
       const messagesRef = collection(docRef, "messages");
-      textRef.current = '';
-      if(inputRef) inputRef?.current?.clear();
+      textRef.current = "";
+      if (inputRef) inputRef?.current?.clear();
       const newDoc = await addDoc(messagesRef, {
         userId: user?.userId,
         text: message,
@@ -72,10 +93,18 @@ const ChatRoom = () => {
     } catch (error: any) {
       Alert.alert("Message", error.message);
     }
-
   };
 
-//   console.log('messages: ',messages)
+  //   console.log('messages: ',messages)
+
+  useEffect(() => {
+    updateScrollView();
+  }, [messages]);
+  const updateScrollView = () => {
+    setTimeout(() => {
+      scrollViewRef?.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
   return (
     <CustomKeyboardView inChat={true}>
       <View className="flex-1 bg-white">
@@ -84,7 +113,11 @@ const ChatRoom = () => {
         <View className="h-3 border-b border-neutral-300"></View>
         <View className="flex-1 justify-between bg-neutral-100 overflow-visible">
           <View className="flex-1">
-            <MessageList messages={messages} currentUser={user}/>
+            <MessageList
+              scrollViewRef={scrollViewRef}
+              messages={messages}
+              currentUser={user}
+            />
           </View>
           <View style={{ marginBottom: hp(1.7) }} className="pt-2">
             <View className="flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5">
