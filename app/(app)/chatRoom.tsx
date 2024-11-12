@@ -28,6 +28,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { MessageType, UserType } from "@/utils/Types";
+import CameraViews from "@/components/CameraView";
 
 const ChatRoom = () => {
   const params = useLocalSearchParams();
@@ -100,6 +101,10 @@ const ChatRoom = () => {
     }
   };
 
+  const handleCamera = () => {
+    router.push("/CameraScreen?inChat=true");
+  };
+
   //   console.log('messages: ',messages)
 
   useEffect(() => {
@@ -138,6 +143,12 @@ const ChatRoom = () => {
                 className="bg-neutral-200 p-2 mr-[1px] rounded-full"
               >
                 <Feather name="send" size={hp(2.7)} color={"#737373"} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCamera}
+                className="bg-neutral-200 p-2 mr-[1px] rounded-full"
+              >
+                <Feather name="camera" size={hp(2.7)} color={"#737373"} />
               </TouchableOpacity>
             </View>
           </View>

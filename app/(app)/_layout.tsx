@@ -13,6 +13,13 @@ const _layout = () => {
           header: () => <HomeHeader />,
         }}
       />
+      <Stack.Screen
+        name="CameraScreen"
+        options={{
+          // header: () => <HomeHeader />,
+          headerShown:false,
+        }}
+      />
     </Stack>
   );
 };
