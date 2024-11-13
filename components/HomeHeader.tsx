@@ -16,12 +16,15 @@ import {
 } from "react-native-popup-menu";
 import MenuItem from "./CustomMenuItem";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 const ios = Platform.OS === "ios";
-const HomeHeader = () => {
+const HomeHeader = ({inProfile}:{inProfile?:boolean}) => {
   const { top } = useSafeAreaInsets();
   const { user, logout } = useAuth();
 
-  const handleProfile = () => {};
+  const handleProfile = () => {
+    router.push('/profile')
+  };
   const handleLogout = async () => {
     await logout();
   };
@@ -32,7 +35,7 @@ const HomeHeader = () => {
     >
       <View>
         <Text style={{ fontSize: hp(3) }} className="font-medium text-white">
-          Chats
+          {inProfile ? 'Profile':'Chats'}
         </Text>
       </View>
 

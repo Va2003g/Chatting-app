@@ -102,7 +102,8 @@ const ChatRoom = () => {
   };
 
   const handleCamera = () => {
-    router.push("/CameraScreen?inChat=true");
+    const itemString = JSON.stringify(item)
+    router.push(`/CameraScreen?inChat=true&item=${itemString}`);
   };
 
   //   console.log('messages: ',messages)

@@ -14,10 +14,17 @@ const _layout = () => {
         }}
       />
       <Stack.Screen
+        name="profile"
+        options={{
+          header: () => <HomeHeader inProfile={true}/>,
+        }}
+      />
+      <Stack.Screen
         name="CameraScreen"
         options={{
           // header: () => <HomeHeader />,
           headerShown:false,
+          presentation:'modal'
         }}
       />
     </Stack>

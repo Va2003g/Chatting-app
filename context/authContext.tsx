@@ -7,7 +7,7 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import {
   Children,
   createContext,
@@ -39,23 +39,44 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return unsub;
   }, []);
 
-  const updateUserData = async (userId: string) => {
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
+  // const updateUserData = async (userId: string) => {
+  //   const docRef = doc(db, "users", userId);
+  //   const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      let data = docSnap.data();
-      setUser(
-        (user) =>
-          ({
-            ...user,
-            username: data.username,
-            profileUrl: data.profileUrl,
-            userId: data.userId,
-          } as UserType)
-      );
-    }
+  //   if (docSnap.exists()) {
+  //     let data = docSnap.data();
+  //     setUser(
+  //       (user) =>
+  //         ({
+  //           ...user,
+  //           username: data.username,
+  //           profileUrl: data.profileUrl,
+  //           userId: data.userId,
+  //         } as UserType)
+  //     );
+  //   }
+  // };
+
+  const updateUserData = (userId: string) => {
+    const docRef = doc(db, "users", userId);
+
+    // Set up a real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUser((user) => ({
+          ...user,
+          username: data.username,
+          profileUrl: data.profileUrl,
+          userId: data.userId,
+        }));
+      }
+    });
+
+    // Optional: return the unsubscribe function if you want to stop listening when the component unmounts
+    return unsubscribe;
   };
+
   const login = async (email: string, password: string) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
@@ -111,7 +132,13 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user: user as UserType, isAuthenticated, login, register, logout }}
+      value={{
+        user: user as UserType,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

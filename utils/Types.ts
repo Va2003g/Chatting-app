@@ -14,6 +14,7 @@ export interface MessageType {
     senderName: string,
     text: string,
     userId: string,
+    picture:string,
 }
 
 export interface AuthContextType {
