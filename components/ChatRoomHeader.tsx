@@ -20,7 +20,7 @@ const ChatRoomHeader = ({ user, router }: { user?: UserType; router?: any }) => 
             <View className="flex-row items-center gap-3">
               <Image
                 source={user?.profileUrl}
-                style={{ height: hp(4.5), aspectRatio: 1 }}
+                style={{ height: hp(4.5), aspectRatio: 1 ,borderRadius:100}}
               />
               <Text
                 style={{ fontSize: hp(2.5) }}

@@ -10,9 +10,10 @@ export const getRoomId = (userId1: string, userId2: string) => {
   return roomId;
 }
 
-export const formatData = (date: Date) => {
+export const formatData = (date: Date,inChat:boolean=false) => {
 
   let day = date.getDate();
+  let year = date.getFullYear()
   var monthNames = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -21,6 +22,7 @@ export const formatData = (date: Date) => {
   var month = monthNames[date.getMonth()];
 
   var formattedDate = day + ' ' + month;
+  if(inChat) return formattedDate + ' ' + year;
   return formattedDate;
 
 }

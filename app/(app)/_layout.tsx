@@ -3,6 +3,7 @@ import React from "react";
 import { Stack } from "expo-router";
 import HomeHeader from "@/components/HomeHeader";
 import ChatRoomHeader from "@/components/ChatRoomHeader";
+import CustomHeader from "@/components/CustomHeaderForFullScreen";
 
 const _layout = () => {
   return (
@@ -25,6 +26,14 @@ const _layout = () => {
           // header: () => <HomeHeader />,
           headerShown:false,
           presentation:'modal'
+        }}
+      />
+      <Stack.Screen
+        name="photoFullScreenView"
+        options={{
+          // header: () => <CustomHeader message={message} />,
+          // headerShown:false,
+          // presentation:'modal'
         }}
       />
     </Stack>

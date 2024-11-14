@@ -1,12 +1,13 @@
 import {
   Alert,
+  Dimensions,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import { Image } from "expo-image";
 import {
   heightPercentageToDP as hp,
@@ -27,6 +28,8 @@ import { UserType } from "@/utils/Types";
 import { upload } from "cloudinary-react-native";
 import { cld } from "@/utils/cloudinary";
 import { router } from "expo-router";
+import CustomKeyboardView from "./CustomKeyboardView";
+import Loading from "./Loading";
 const PhotoPreview = ({
   photoUrl,
   inProfile,
@@ -37,9 +40,11 @@ const PhotoPreview = ({
   item: UserType;
 }) => {
   console.log("photoUrl in photopreview ", photoUrl);
+  const { width, height } = Dimensions.get("window");
   const textRef = useRef("");
   const inputRef = useRef<TextInput>(null);
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
   if (inProfile) {
     return (
       <View
@@ -57,8 +62,9 @@ const PhotoPreview = ({
 
   const handleSendMessage = async () => {
     let message = textRef.current.trim();
-    if (!message) return;
+    if (!message) message = "";
     try {
+      setLoading(true);
       let roomId = getRoomId(user?.userId, item?.userId);
       const docRef = doc(db, "rooms", roomId);
       const messagesRef = collection(docRef, "messages");
@@ -81,15 +87,15 @@ const PhotoPreview = ({
             text: message,
             profileUrl: user?.profileUrl,
             senderName: user?.username,
-            picture:response.secure_url,
+            picture: response.secure_url,
             createdAt: Timestamp.fromDate(new Date()),
           });
-    
+
           console.log("new message id: ", newDoc.id);
+          setLoading(false);
           router.back();
         },
       });
-      
     } catch (error: any) {
       Alert.alert("Message", error.message);
     }
@@ -98,12 +104,55 @@ const PhotoPreview = ({
   // const handleCamera = () => {
   //   router.push("/CameraScreen?inChat=true");
   // };
+  console.log(loading, "loading");
+  // return !loading ? (
+  //   <CustomKeyboardView inChat={true}>
+  //     <Image
+  //       source={photoUrl}
+  //       style={styles.previewImage}
+  //       className={`${!loading} && bg-gray-400`}
+  //     />
+  //     <View
+  //       style={{}}
+  //       className="absolute bottom-2 flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5 gap-4"
+  //     >
+  //       <TouchableOpacity
+  //         // onPress={handleCamera}
+  //         className="bg-neutral-200 p-2 -ml-[6px] rounded-full"
+  //       >
+  //         <Feather name="camera" size={hp(2.7)} color={"#737373"} />
+  //       </TouchableOpacity>
+  //       <TextInput
+  //         placeholder="Type message"
+  //         className="flex-1 "
+  //         style={{ fontSize: hp(2) }}
+  //         onChangeText={(value) => (textRef.current = value)}
+  //         ref={inputRef}
+  //       />
+  //       <TouchableOpacity
+  //         onPress={handleSendMessage}
+  //         className="bg-neutral-200 p-2 mr-[1px] rounded-full"
+  //       >
+  //         <Feather name="send" size={hp(2.7)} color={"#737373"} />
+  //       </TouchableOpacity>
+  //     </View>
+  //   </CustomKeyboardView>
+  // ) : (
+  //   <View className="flex-1 justify-center items-center">
+  //     <Loading size={100} />
+  //   </View>
+  // );
+
   return (
-    <View style={styles.previewContainer}>
-      <Image source={photoUrl} style={styles.previewImage} />
+    <CustomKeyboardView inChat={true}>
+      <Image
+        source={photoUrl}
+        style={styles.previewImage}
+        className={`${loading} && bg-gray-600`}
+      />
       <View
         style={{}}
-        className="absolute bottom-14 flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5 gap-4"
+        className="absolute bottom-2 flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5 gap-4"
       >
         <TouchableOpacity
           // onPress={handleCamera}
@@ -113,7 +162,7 @@ const PhotoPreview = ({
         </TouchableOpacity>
         <TextInput
           placeholder="Type message"
-          className="flex-1 mr-2"
+          className="flex-1 "
           style={{ fontSize: hp(2) }}
           onChangeText={(value) => (textRef.current = value)}
           ref={inputRef}
@@ -125,7 +174,15 @@ const PhotoPreview = ({
           <Feather name="send" size={hp(2.7)} color={"#737373"} />
         </TouchableOpacity>
       </View>
-    </View>
+      {loading && (
+        <View
+          className="flex-1 justify-center items-center absolute"
+          style={{ width: width, height: height }}
+        >
+          <Loading size={100} />
+        </View>
+      )}
+    </CustomKeyboardView>
   );
 };
 

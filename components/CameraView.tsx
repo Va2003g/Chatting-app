@@ -34,11 +34,11 @@ import { UserType } from "@/utils/Types";
 export default function CameraViews({
   inChat,
   inProfile,
-  item
+  item,
 }: {
   inChat: boolean;
   inProfile?: boolean;
-  item:UserType
+  item: UserType;
 }) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
@@ -92,7 +92,7 @@ export default function CameraViews({
             },
             {
               text: "Confirm",
-              onPress: () => updateUserProfilePhoto(),
+              onPress: () => updateUserProfilePhoto(photo.uri),
             },
           ]
         );
@@ -100,20 +100,20 @@ export default function CameraViews({
     }
   }
 
-  const updateUserProfilePhoto = async () => {
-    if (!photoUrl) {
-      console.log("in if condition", photoUrl);
+  const updateUserProfilePhoto = async (photoURl:string) => {
+    if (!photoURl) {
+      console.log("in if condition", photoURl);
       return;
     }
     try {
-      console.log("photourl", photoUrl);
+      console.log("photourl", photoURl);
       const options = {
         upload_preset: "chatting-app",
         unsigned: true,
       };
 
       await upload(cld, {
-        file: photoUrl,
+        file: photoURl,
         options: options,
         callback: async (error: any, response: any) => {
           //.. handle response
@@ -186,7 +186,9 @@ export default function CameraViews({
         <Image source={photoUrl} className="flex-1 w-full h-full" />
         </View>
         )} */}
-      {photoUrl && <PhotoPreview photoUrl={photoUrl} inProfile={inProfile} item={item} />}
+      {photoUrl && (
+        <PhotoPreview photoUrl={photoUrl} inProfile={inProfile} item={item} />
+      )}
     </View>
   );
 }
