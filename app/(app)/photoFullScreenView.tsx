@@ -14,15 +14,18 @@ import { MessageType } from "@/utils/Types";
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
-let headerHeight:number=0;
+let headerHeight: number = 0;
 // const PhotoFullScreenView = ({ image, text }: { image: string; text?: string }) => {
 const PhotoFullScreenView = () => {
-    const { messageString } = useLocalSearchParams();
-    const ios = Platform.OS === "ios";
-    const { top } = useSafeAreaInsets();
-    headerHeight = ios ? top + heightPercentageToDP(6) : top + heightPercentageToDP(6) + 10;;
-    const [isVisible, setIsVisible] = useState(true);
-  let message: MessageType = typeof messageString === "string" && JSON.parse(messageString);
+  const { messageString } = useLocalSearchParams();
+  const ios = Platform.OS === "ios";
+  const { top } = useSafeAreaInsets();
+  headerHeight = ios
+    ? top + heightPercentageToDP(6)
+    : top + heightPercentageToDP(6) + 10;
+  const [isVisible, setIsVisible] = useState(true);
+  let message: MessageType =
+    typeof messageString === "string" && JSON.parse(messageString);
   return (
     <Pressable style={{ flex: 1 }} onPress={() => setIsVisible(!isVisible)}>
       <CustomHeader message={message} inPhotoPreview={isVisible} />
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: height - (headerHeight - heightPercentageToDP(6))
+    height: height - (headerHeight - heightPercentageToDP(6)),
     // position: "absolute",
   },
   text: {
