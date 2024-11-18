@@ -1,20 +1,8 @@
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import React, { ReactNode } from "react";
 
 const ios = Platform.OS === "ios";
-const CustomKeyboardView = ({
-  children,
-  inChat,
-}: {
-  children: ReactNode;
-  inChat?: boolean;
-}) => {
+const CustomKeyboardView = ({ children, inChat }: { children: ReactNode; inChat?: boolean }) => {
   let kavConfig = {};
   let scrollViewConfig = {};
   if (inChat) {

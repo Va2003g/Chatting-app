@@ -10,13 +10,7 @@ const CameraScreen = () => {
   if (typeof item === "string") {
     itemObject = JSON.parse(item);
   }
-  return (
-    <CameraViews
-      inChat={inChat === "true" ? true : false}
-      inProfile={inProfile === "true" ? true : false}
-      item={itemObject}
-    />
-  );
+  return <CameraViews inChat={inChat === "true" ? true : false} inProfile={inProfile === "true" ? true : false} item={itemObject} />;
 };
 
 export default CameraScreen;

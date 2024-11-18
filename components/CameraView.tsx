@@ -1,25 +1,10 @@
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
-import {
-  CameraView,
-  CameraType,
-  useCameraPermissions,
-  FlashMode,
-} from "expo-camera";
+import { CameraView, CameraType, useCameraPermissions, FlashMode } from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert,
-} from "react-native";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { Button, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import PhotoPreview from "./PhotoPreview";
 import { useAuth } from "@/context/authContext";
 import { db } from "@/firebaseConfig";
@@ -31,15 +16,7 @@ import ImageResizer from "react-native-image-resizer";
 import { router } from "expo-router";
 import { UserType } from "@/utils/Types";
 
-export default function CameraViews({
-  inChat,
-  inProfile,
-  item,
-}: {
-  inChat: boolean;
-  inProfile?: boolean;
-  item: UserType;
-}) {
+export default function CameraViews({ inChat, inProfile, item }: { inChat: boolean; inProfile?: boolean; item: UserType }) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [flash, setFlash] = useState(true);
@@ -59,9 +36,7 @@ export default function CameraViews({
     // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
+        <Text style={styles.message}>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
@@ -81,26 +56,22 @@ export default function CameraViews({
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoUrl(photo.uri);
       if (inProfile) {
-        Alert.alert(
-          "Confirm Profile Photo",
-          "Are you sure you want to save this photo as your profile picture?",
-          [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel",
-            },
-            {
-              text: "Confirm",
-              onPress: () => updateUserProfilePhoto(photo.uri),
-            },
-          ]
-        );
+        Alert.alert("Confirm Profile Photo", "Are you sure you want to save this photo as your profile picture?", [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Confirm",
+            onPress: () => updateUserProfilePhoto(photo.uri),
+          },
+        ]);
       }
     }
   }
 
-  const updateUserProfilePhoto = async (photoURl:string) => {
+  const updateUserProfilePhoto = async (photoURl: string) => {
     if (!photoURl) {
       console.log("in if condition", photoURl);
       return;
@@ -140,24 +111,8 @@ export default function CameraViews({
           // flash={flash}
           ref={cameraRef}
         >
-          <TouchableOpacity
-            style={styles.button}
-            onPress={toggleTorch}
-            className="flex-1 relative top-20 right-[350px]"
-          >
-            {flash ? (
-              <MaterialCommunityIcons
-                name="flashlight-off"
-                size={24}
-                color="white"
-              />
-            ) : (
-              <MaterialCommunityIcons
-                name="flashlight"
-                size={24}
-                color="white"
-              />
-            )}
+          <TouchableOpacity style={styles.button} onPress={toggleTorch} className="flex-1 relative top-20 right-[350px]">
+            {flash ? <MaterialCommunityIcons name="flashlight-off" size={24} color="white" /> : <MaterialCommunityIcons name="flashlight" size={24} color="white" />}
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -186,9 +141,7 @@ export default function CameraViews({
         <Image source={photoUrl} className="flex-1 w-full h-full" />
         </View>
         )} */}
-      {photoUrl && (
-        <PhotoPreview photoUrl={photoUrl} inProfile={inProfile} item={item} />
-      )}
+      {photoUrl && <PhotoPreview photoUrl={photoUrl} inProfile={inProfile} item={item} />}
     </View>
   );
 }

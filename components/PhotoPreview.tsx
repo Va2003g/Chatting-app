@@ -1,27 +1,10 @@
-import {
-  Alert,
-  Dimensions,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { ReactNode, useRef, useState } from "react";
 import { Image } from "expo-image";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { Feather } from "@expo/vector-icons";
 import { getRoomId } from "@/utils/common";
-import {
-  addDoc,
-  collection,
-  doc,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { useAuth } from "@/context/authContext";
 import { UserType } from "@/utils/Types";
@@ -30,15 +13,7 @@ import { cld } from "@/utils/cloudinary";
 import { router } from "expo-router";
 import CustomKeyboardView from "./CustomKeyboardView";
 import Loading from "./Loading";
-const PhotoPreview = ({
-  photoUrl,
-  inProfile,
-  item,
-}: {
-  photoUrl: string | null;
-  inProfile?: boolean;
-  item: UserType;
-}) => {
+const PhotoPreview = ({ photoUrl, inProfile, item }: { photoUrl: string | null; inProfile?: boolean; item: UserType }) => {
   console.log("photoUrl in photopreview ", photoUrl);
   const { width, height } = Dimensions.get("window");
   const textRef = useRef("");
@@ -47,15 +22,8 @@ const PhotoPreview = ({
   const [loading, setLoading] = useState(false);
   if (inProfile) {
     return (
-      <View
-        className="flex-1 bg-red-100"
-        style={{ width: wp(100), height: hp(100) }}
-      >
-        <Image
-          source={photoUrl}
-          style={{ width: wp(100), height: hp(100) }}
-          className="flex-1 w-full h-full"
-        />
+      <View className="flex-1 bg-red-100" style={{ width: wp(100), height: hp(100) }}>
+        <Image source={photoUrl} style={{ width: wp(100), height: hp(100) }} className="flex-1 w-full h-full" />
       </View>
     );
   }
@@ -145,40 +113,21 @@ const PhotoPreview = ({
 
   return (
     <CustomKeyboardView inChat={true}>
-      <Image
-        source={photoUrl}
-        style={styles.previewImage}
-        className={`${loading} && bg-gray-600`}
-      />
-      <View
-        style={{}}
-        className="absolute bottom-2 flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5 gap-4"
-      >
+      <Image source={photoUrl} style={styles.previewImage} className={`${loading} && bg-gray-600`} />
+      <View style={{}} className="absolute bottom-2 flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5 gap-4">
         <TouchableOpacity
           // onPress={handleCamera}
           className="bg-neutral-200 p-2 -ml-[6px] rounded-full"
         >
           <Feather name="camera" size={hp(2.7)} color={"#737373"} />
         </TouchableOpacity>
-        <TextInput
-          placeholder="Type message"
-          className="flex-1 "
-          style={{ fontSize: hp(2) }}
-          onChangeText={(value) => (textRef.current = value)}
-          ref={inputRef}
-        />
-        <TouchableOpacity
-          onPress={handleSendMessage}
-          className="bg-neutral-200 p-2 mr-[1px] rounded-full"
-        >
+        <TextInput placeholder="Type message" className="flex-1 " style={{ fontSize: hp(2) }} onChangeText={(value) => (textRef.current = value)} ref={inputRef} />
+        <TouchableOpacity onPress={handleSendMessage} className="bg-neutral-200 p-2 mr-[1px] rounded-full">
           <Feather name="send" size={hp(2.7)} color={"#737373"} />
         </TouchableOpacity>
       </View>
       {loading && (
-        <View
-          className="flex-1 justify-center items-center absolute"
-          style={{ width: width, height: height }}
-        >
+        <View className="flex-1 justify-center items-center absolute" style={{ width: width, height: height }}>
           <Loading size={100} />
         </View>
       )}

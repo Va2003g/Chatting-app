@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Keyboard,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -16,16 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import CustomKeyboardView from "@/components/CustomKeyboardView";
 import { useAuth } from "@/context/authContext";
 import { getRoomId } from "@/utils/common";
-import {
-  addDoc,
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { MessageType, UserType } from "@/utils/Types";
 import CameraViews from "@/components/CameraView";
@@ -58,10 +42,7 @@ const ChatRoom = () => {
       setMessages([...allMessages] as MessageType[]);
     });
 
-    const keyboardShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      updateScrollView
-    );
+    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", updateScrollView);
 
     return () => {
       unsub;
@@ -102,7 +83,7 @@ const ChatRoom = () => {
   };
 
   const handleCamera = () => {
-    const itemString = JSON.stringify(item)
+    const itemString = JSON.stringify(item);
     router.push(`/CameraScreen?inChat=true&item=${itemString}`);
   };
 
@@ -124,31 +105,15 @@ const ChatRoom = () => {
         <View className="h-3 border-b border-neutral-300"></View>
         <View className="flex-1 justify-between bg-neutral-100 overflow-visible">
           <View className="flex-1">
-            <MessageList
-              scrollViewRef={scrollViewRef}
-              messages={messages}
-              currentUser={user}
-            />
+            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} />
           </View>
           <View style={{ marginBottom: hp(1.7) }} className="pt-2">
             <View className="flex-row mx-3 justify-between bg-white border p-2 border-neutral-300 rounded-full pl-5">
-              <TextInput
-                placeholder="Type message"
-                className="flex-1 mr-2"
-                style={{ fontSize: hp(2) }}
-                onChangeText={(value) => (textRef.current = value)}
-                ref={inputRef}
-              />
-              <TouchableOpacity
-                onPress={handleSendMessage}
-                className="bg-neutral-200 p-2 mr-[1px] rounded-full"
-              >
+              <TextInput placeholder="Type message" className="flex-1 mr-2" style={{ fontSize: hp(2) }} onChangeText={(value) => (textRef.current = value)} ref={inputRef} />
+              <TouchableOpacity onPress={handleSendMessage} className="bg-neutral-200 p-2 mr-[1px] rounded-full">
                 <Feather name="send" size={hp(2.7)} color={"#737373"} />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleCamera}
-                className="bg-neutral-200 p-2 mr-[1px] rounded-full"
-              >
+              <TouchableOpacity onPress={handleCamera} className="bg-neutral-200 p-2 mr-[1px] rounded-full">
                 <Feather name="camera" size={hp(2.7)} color={"#737373"} />
               </TouchableOpacity>
             </View>

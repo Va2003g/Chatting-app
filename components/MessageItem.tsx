@@ -1,20 +1,11 @@
 import { View, Text, Pressable } from "react-native";
 import React from "react";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { MessageType, UserType } from "@/utils/Types";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 
-const MessageItem = ({
-  message,
-  currentUser,
-}: {
-  message: MessageType;
-  currentUser: UserType;
-}) => {
+const MessageItem = ({ message, currentUser }: { message: MessageType; currentUser: UserType }) => {
   const router = useRouter();
 
   function moveToFullScreen(message: MessageType) {
@@ -32,10 +23,7 @@ const MessageItem = ({
           <View className="flex self-end p-3 rounded-2xl bg-white border border-neutral-200">
             {message.picture && (
               <Pressable onPress={() => moveToFullScreen(message)}>
-                <Image
-                  source={message.picture}
-                  style={{ width: wp(50), height: hp(30) }}
-                />
+                <Image source={message.picture} style={{ width: wp(50), height: hp(30) }} />
               </Pressable>
             )}
             <Text
@@ -56,10 +44,7 @@ const MessageItem = ({
         <View className="flex self-start p-3 px-4 rounded-2xl bg-indigo-100 border border-indigo-200 gap-2">
           {message.picture && (
             <Pressable onPress={() => moveToFullScreen(message)}>
-              <Image
-                source={message.picture}
-                style={{ width: wp(50), height: hp(30) }}
-              />
+              <Image source={message.picture} style={{ width: wp(50), height: hp(30) }} />
             </Pressable>
           )}
           <Text

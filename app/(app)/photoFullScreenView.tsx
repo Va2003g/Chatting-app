@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Pressable,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, Pressable, Platform } from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
@@ -20,24 +13,15 @@ const PhotoFullScreenView = () => {
   const { messageString } = useLocalSearchParams();
   const ios = Platform.OS === "ios";
   const { top } = useSafeAreaInsets();
-  headerHeight = ios
-    ? top + heightPercentageToDP(6)
-    : top + heightPercentageToDP(6) + 10;
+  headerHeight = ios ? top + heightPercentageToDP(6) : top + heightPercentageToDP(6) + 10;
   const [isVisible, setIsVisible] = useState(true);
-  let message: MessageType =
-    typeof messageString === "string" && JSON.parse(messageString);
+  let message: MessageType = typeof messageString === "string" && JSON.parse(messageString);
   return (
     <Pressable style={{ flex: 1 }} onPress={() => setIsVisible(!isVisible)}>
       <CustomHeader message={message} inPhotoPreview={isVisible} />
       <View style={styles.container}>
-        <Image
-          source={message.picture}
-          style={styles.image}
-          contentFit="contain"
-        />
-        {message.text && isVisible && (
-          <Text style={styles.text}>{message.text}</Text>
-        )}
+        <Image source={message.picture} style={styles.image} contentFit="contain" />
+        {message.text && isVisible && <Text style={styles.text}>{message.text}</Text>}
       </View>
     </Pressable>
   );

@@ -17,24 +17,26 @@ const _layout = () => {
       <Stack.Screen
         name="profile"
         options={{
-          header: () => <HomeHeader inProfile={true}/>,
+          header: () => <HomeHeader inProfile={true} />,
         }}
       />
       <Stack.Screen
         name="CameraScreen"
         options={{
           // header: () => <HomeHeader />,
-          headerShown:false,
-          presentation:'modal'
+          headerShown: false,
+          presentation: "modal",
         }}
       />
       <Stack.Screen
         name="photoFullScreenView"
-        options={{
-          // header: () => <CustomHeader message={message} />,
-          // headerShown:false,
-          // presentation:'modal'
-        }}
+        options={
+          {
+            // header: () => <CustomHeader message={message} />,
+            // headerShown:false,
+            // presentation:'modal'
+          }
+        }
       />
     </Stack>
   );

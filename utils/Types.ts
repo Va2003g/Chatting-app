@@ -5,7 +5,7 @@ export interface UserType {
     username: string,
     userId: string,
     profileUrl: string,
-    [key:string]:string,
+    [key: string]: string,
 }
 
 export interface MessageType {
@@ -14,7 +14,7 @@ export interface MessageType {
     senderName: string,
     text: string,
     userId: string,
-    picture:string,
+    picture: string,
 }
 
 export interface AuthContextType {

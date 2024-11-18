@@ -2,16 +2,13 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useAuth } from "@/context/authContext";
 import { Image } from "expo-image";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { router } from "expo-router";
 const Profile = () => {
   const { user } = useAuth();
-  const handleProfilePhotoChange = ()=>{
-    router.push('/CameraScreen?inProfile=true')
-  }
+  const handleProfilePhotoChange = () => {
+    router.push("/CameraScreen?inProfile=true");
+  };
   return (
     <View className="flex-1 items-center gap-8">
       <Pressable onPress={handleProfilePhotoChange}>

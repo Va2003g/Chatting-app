@@ -1,29 +1,14 @@
 import { auth, db } from "@/firebaseConfig";
 import { AuthContextType, UserType } from "@/utils/Types";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { addDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import {
-  Children,
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Children, createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null | User>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
-    undefined
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -98,18 +83,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       return { success: false, msg: e.message, error: e };
     }
   };
-  const register = async (
-    email: string,
-    password: string,
-    username: string,
-    profileUrl: string
-  ) => {
+  const register = async (email: string, password: string, username: string, profileUrl: string) => {
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       console.log("response.user", response.user);
 
       await setDoc(doc(db, "users", response?.user?.uid), {
@@ -122,10 +98,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       console.log(e);
       let msg = e.message;
       if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
-      if (msg.includes("(auth/invalid-password)"))
-        msg = "Password should be minimum of 6 length";
-      if (msg.includes("(auth/email-already-in-use)"))
-        msg = "This email is already in use";
+      if (msg.includes("(auth/invalid-password)")) msg = "Password should be minimum of 6 length";
+      if (msg.includes("(auth/email-already-in-use)")) msg = "This email is already in use";
       return { success: false, msg };
     }
   };

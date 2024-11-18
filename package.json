@@ -9,6 +9,9 @@
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
+  "prettier": {
+    "printWidth": 200
+  },
   "jest": {
     "preset": "jest-expo"
   },

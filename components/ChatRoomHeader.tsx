@@ -9,34 +9,28 @@ import { UserType } from "@/utils/Types";
 const ChatRoomHeader = ({ user, router }: { user?: UserType; router?: any }) => {
   return (
     <Stack.Screen
-    options={{
-        headerShadowVisible:false,
-        title:'',
+      options={{
+        headerShadowVisible: false,
+        title: "",
         headerLeft: () => (
           <View className="flex-row items-center gap-4">
             <TouchableOpacity onPress={() => router.back()}>
               <Entypo name="chevron-left" size={hp(4)} color="#737373" />
             </TouchableOpacity>
             <View className="flex-row items-center gap-3">
-              <Image
-                source={user?.profileUrl}
-                style={{ height: hp(4.5), aspectRatio: 1 ,borderRadius:100}}
-              />
-              <Text
-                style={{ fontSize: hp(2.5) }}
-                className="text-neutral-700 font-medium"
-              >
+              <Image source={user?.profileUrl} style={{ height: hp(4.5), aspectRatio: 1, borderRadius: 100 }} />
+              <Text style={{ fontSize: hp(2.5) }} className="text-neutral-700 font-medium">
                 {user?.username}
               </Text>
             </View>
           </View>
         ),
-        headerRight:()=>(
-            <View className="flex-row items-center gap-8">
-                <Ionicons name="call" size={hp(2.8)} color={'#737373'}/>
-                <Ionicons name="videocam" size={hp(2.8)} color={'#737373'}/>
-            </View>
-        )
+        headerRight: () => (
+          <View className="flex-row items-center gap-8">
+            <Ionicons name="call" size={hp(2.8)} color={"#737373"} />
+            <Ionicons name="videocam" size={hp(2.8)} color={"#737373"} />
+          </View>
+        ),
       }}
     />
   );
