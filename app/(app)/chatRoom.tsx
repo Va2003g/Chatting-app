@@ -9,10 +9,11 @@ import { Feather } from "@expo/vector-icons";
 import CustomKeyboardView from "@/components/CustomKeyboardView";
 import { useAuth } from "@/context/authContext";
 import { getRoomId } from "@/utils/common";
-import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import { MessageType, UserType } from "@/utils/Types";
+import { MessageType, NotificationMessageType, UserType } from "@/utils/Types";
 import CameraViews from "@/components/CameraView";
+import { sendPushNotification } from "@/components/usePushNotifications";
 
 const ChatRoom = () => {
   const params = useLocalSearchParams();
@@ -27,7 +28,6 @@ const ChatRoom = () => {
   const textRef = useRef("");
   const inputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-
   useEffect(() => {
     createRoomIfNotExists();
 
@@ -59,15 +59,52 @@ const ChatRoom = () => {
     });
   };
 
+  // const handleSendMessage = async () => {
+  //   let message = textRef.current.trim();
+  //   if (!message) return;
+  //   try {
+  //     let roomId = getRoomId(user?.userId, item?.userId);
+  //     const docRef = doc(db, "rooms", roomId);
+  //     const messagesRef = collection(docRef, "messages");
+  //     textRef.current = "";
+  //     if (inputRef) inputRef?.current?.clear();
+  //     const newDoc = await addDoc(messagesRef, {
+  //       userId: user?.userId,
+  //       text: message,
+  //       profileUrl: user?.profileUrl,
+  //       senderName: user?.username,
+  //       createdAt: Timestamp.fromDate(new Date()),
+  //     });
+
+  //     const notificationMessage: NotificationMessageType = {
+  //       title: user?.username,
+  //       body: message,
+  //       data: { profile: user?.profileUrl, createdAt: Timestamp.fromDate(new Date()) },
+  //     };
+  //     sendPushNotification(expoPushToken, notificationMessage);
+  //     console.log("new message id: ", newDoc.id);
+  //   } catch (error: any) {
+  //     Alert.alert("Message", error.message);
+  //   }
+  // };
+
   const handleSendMessage = async () => {
     let message = textRef.current.trim();
     if (!message) return;
+
     try {
+      // Get Room ID
       let roomId = getRoomId(user?.userId, item?.userId);
+
+      // References
       const docRef = doc(db, "rooms", roomId);
       const messagesRef = collection(docRef, "messages");
+
+      // Clear input
       textRef.current = "";
       if (inputRef) inputRef?.current?.clear();
+
+      // Add Message to Firestore
       const newDoc = await addDoc(messagesRef, {
         userId: user?.userId,
         text: message,
@@ -76,7 +113,35 @@ const ChatRoom = () => {
         createdAt: Timestamp.fromDate(new Date()),
       });
 
-      console.log("new message id: ", newDoc.id);
+      console.log("New message ID: ", newDoc.id);
+
+      // Fetch Receiver's Expo Push Token from Firestore
+      const receiverRef = doc(db, "users", item?.userId); // Assuming user tokens are stored in 'users' collection
+      console.log('item',item?.userId)
+      const receiverDoc = await getDoc(receiverRef);
+
+      if (receiverDoc.exists()) {
+        const receiverData = receiverDoc.data();
+        const expoPushToken = receiverData?.expopushtoken;
+
+        if (expoPushToken) {
+          // Prepare and Send Notification
+          const notificationMessage: NotificationMessageType = {
+            title: user?.username || "New Message",
+            body: message,
+            data: {
+              profile: user?.profileUrl || "",
+              createdAt: new Date().toISOString(),
+            },
+          };
+
+          await sendPushNotification(expoPushToken, notificationMessage);
+        } else {
+          console.log("Receiver has no Expo push token.");
+        }
+      } else {
+        console.log("Receiver document does not exist.");
+      }
     } catch (error: any) {
       Alert.alert("Message", error.message);
     }

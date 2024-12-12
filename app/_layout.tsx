@@ -4,6 +4,7 @@ import "../global.css";
 import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { MenuProvider } from "react-native-popup-menu";
+import PushNotifications from "@/components/usePushNotifications";
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
@@ -26,6 +27,7 @@ export default function RootLayout() {
   return (
     <MenuProvider>
       <AuthContextProvider>
+        <PushNotifications />
         <MainLayout />
       </AuthContextProvider>
     </MenuProvider>

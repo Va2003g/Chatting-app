@@ -8,6 +8,7 @@ import Loading from "@/components/Loading";
 import { getDocs, query, where } from "firebase/firestore";
 import { usersRef } from "@/firebaseConfig";
 import { UserType } from "@/utils/Types";
+import PushNotifications from "@/components/usePushNotifications";
 const Home = () => {
   const { logout, user } = useAuth();
   const [users, setUsers] = useState<UserType[]>([]);
@@ -28,6 +29,7 @@ const Home = () => {
   useEffect(() => {
     if (user?.uid) getUsers();
   }, []);
+
   console.log("user data", user);
   return (
     <View className="flex-1 bg-white">
@@ -40,6 +42,7 @@ const Home = () => {
           <Loading size={hp(10)} />
         </View>
       )}
+      
     </View>
   );
 };

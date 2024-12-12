@@ -31,4 +31,16 @@ export interface AuthContextType {
         profileUrl: string
     ) => Promise<{ success: boolean; data?: Object; msg?: string }>;
     logout: () => Promise<{ success: boolean; data?: Object; msg?: string }>;
+    expoPushToken: string,
+    setExpoPushToken: React.Dispatch<React.SetStateAction<string>>;
+    message: NotificationMessageType | null,
+    setMessage: React.Dispatch<React.SetStateAction<NotificationMessageType | null>>
+}
+
+export interface NotificationMessageType {
+    to?: string,
+    sound?: string,
+    title: string,
+    body: string,
+    data: Object,
 }

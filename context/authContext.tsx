@@ -1,5 +1,5 @@
 import { auth, db } from "@/firebaseConfig";
-import { AuthContextType, UserType } from "@/utils/Types";
+import { AuthContextType, NotificationMessageType, UserType } from "@/utils/Types";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { addDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { Children, createContext, ReactNode, useContext, useEffect, useState } from "react";
@@ -9,6 +9,8 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null | User>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined);
+  const [expoPushToken,setExpoPushToken] = useState('');
+  const [message,setMessage] = useState<NotificationMessageType|null>(null)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -54,6 +56,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           username: data.username,
           profileUrl: data.profileUrl,
           userId: data.userId,
+          expopushtoken:expoPushToken
         }));
       }
     });
@@ -112,6 +115,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         login,
         register,
         logout,
+        expoPushToken,
+        setExpoPushToken,
+        message,
+        setMessage,
       }}
     >
       {children}
